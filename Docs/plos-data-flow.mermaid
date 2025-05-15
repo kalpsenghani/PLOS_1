@@ -1,0 +1,127 @@
+flowchart TD
+    User((User))
+    
+    subgraph "Frontend"
+        UI_Dashboard["Dashboard UI"]
+        UI_Journal["Journal UI"]
+        UI_Goals["Goals UI"]
+        UI_Mental["Mental Health UI"]
+        UI_Physical["Physical Health UI"]
+        UI_Nutrition["Nutrition UI"]
+        UI_Social["Social UI"]
+    end
+    
+    subgraph "State Management"
+        Store_Dashboard["Dashboard Store"]
+        Store_Journal["Journal Store"]
+        Store_Goals["Goals Store"]
+        Store_Mental["Mental Health Store"]
+        Store_Physical["Physical Health Store"]
+        Store_Nutrition["Nutrition Store"]
+        Store_Social["Social Store"]
+    end
+    
+    subgraph "API Layer"
+        API_Auth["Auth API"]
+        API_Journal["Journal API"]
+        API_Goals["Goals API"]
+        API_Mental["Mental Health API"]
+        API_Physical["Physical Health API"]
+        API_Nutrition["Nutrition API"]
+        API_Social["Social API"]
+        API_AI["AI API"]
+    end
+    
+    subgraph "Database"
+        DB_Users["Users Table"]
+        DB_Journal["Journal Entries Table"]
+        DB_Goals["Goals Table"]
+        DB_Mood["Mood Entries Table"]
+        DB_Health["Health Metrics Table"]
+        DB_Nutrition["Nutrition Logs Table"]
+        DB_Social["Social Events Table"]
+    end
+    
+    subgraph "External Services"
+        OpenAI["OpenAI API"]
+    end
+    
+    %% User interactions
+    User --> UI_Dashboard
+    User --> UI_Journal
+    User --> UI_Goals
+    User --> UI_Mental
+    User --> UI_Physical
+    User --> UI_Nutrition
+    User --> UI_Social
+    
+    %% Frontend to State Management
+    UI_Dashboard <--> Store_Dashboard
+    UI_Journal <--> Store_Journal
+    UI_Goals <--> Store_Goals
+    UI_Mental <--> Store_Mental
+    UI_Physical <--> Store_Physical
+    UI_Nutrition <--> Store_Nutrition
+    UI_Social <--> Store_Social
+    
+    %% State Management to API
+    Store_Dashboard <--> API_Auth
+    Store_Journal <--> API_Journal
+    Store_Goals <--> API_Goals
+    Store_Mental <--> API_Mental
+    Store_Physical <--> API_Physical
+    Store_Nutrition <--> API_Nutrition
+    Store_Social <--> API_Social
+    
+    %% API to Database
+    API_Auth <--> DB_Users
+    API_Journal <--> DB_Journal
+    API_Goals <--> DB_Goals
+    API_Mental <--> DB_Mood
+    API_Physical <--> DB_Health
+    API_Nutrition <--> DB_Nutrition
+    API_Social <--> DB_Social
+    
+    %% AI Connections
+    API_Journal --> API_AI
+    API_Mental --> API_AI
+    API_Physical --> API_AI
+    API_Nutrition --> API_AI
+    API_Social --> API_AI
+    API_AI --> OpenAI
+    
+    %% Example data flows
+    User -->|"1. Creates journal entry"| UI_Journal
+    UI_Journal -->|"2. Updates UI state"| Store_Journal
+    Store_Journal -->|"3. Sends data to API"| API_Journal
+    API_Journal -->|"4. Stores in database"| DB_Journal
+    API_Journal -->|"5. Requests sentiment analysis"| API_AI
+    API_AI -->|"6. Sends text for analysis"| OpenAI
+    OpenAI -->|"7. Returns sentiment"| API_AI
+    API_AI -->|"8. Returns analysis"| API_Journal
+    API_Journal -->|"9. Updates entry with sentiment"| DB_Journal
+    API_Journal -->|"10. Returns updated entry"| Store_Journal
+    Store_Journal -->|"11. Updates UI with sentiment"| UI_Journal
+    
+    %% Dashboard aggregation
+    DB_Journal -->|"Stats"| Store_Dashboard
+    DB_Goals -->|"Stats"| Store_Dashboard
+    DB_Mood -->|"Stats"| Store_Dashboard
+    DB_Health -->|"Stats"| Store_Dashboard
+    DB_Nutrition -->|"Stats"| Store_Dashboard
+    DB_Social -->|"Stats"| Store_Dashboard
+    Store_Dashboard -->|"Displays aggregated data"| UI_Dashboard
+    
+    classDef userNode fill:#f9f,stroke:#333,stroke-width:2px;
+    classDef frontendNode fill:#bbf,stroke:#333,stroke-width:1px;
+    classDef storeNode fill:#ddf,stroke:#333,stroke-width:1px;
+    classDef apiNode fill:#ffd,stroke:#333,stroke-width:1px;
+    classDef dbNode fill:#dfd,stroke:#333,stroke-width:1px;
+    classDef externalNode fill:#fdd,stroke:#333,stroke-width:1px;
+    
+    class User userNode;
+    class UI_Dashboard,UI_Journal,UI_Goals,UI_Mental,UI_Physical,UI_Nutrition,UI_Social frontendNode;
+    class Store_Dashboard,Store_Journal,Store_Goals,Store_Mental,Store_Physical,Store_Nutrition,Store_Social storeNode;
+    class API_Auth,API_Journal,API_Goals,API_Mental,API_Physical,API_Nutrition,API_Social,API_AI apiNode;
+    class DB_Users,DB_Journal,DB_Goals,DB_Mood,DB_Health,DB_Nutrition,DB_Social dbNode;
+    class OpenAI externalNode;

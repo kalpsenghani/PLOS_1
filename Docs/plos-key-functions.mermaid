@@ -1,0 +1,139 @@
+flowchart LR
+    subgraph "Dashboard Module"
+        DB_Load["Load Dashboard"]
+        DB_FetchStats["Fetch Stats\nuseDashboardStore.getStats()"]
+        DB_FetchQuote["Fetch Daily Quote\nGET /api/quote"]
+        DB_Render["Render Dashboard\n- WelcomeBanner\n- QuoteCard\n- StatsGrid\n- ActionCards"]
+        DB_Update["Update Stats\nuseDashboardStore.updateStat()"]
+        
+        DB_Load --> DB_FetchStats
+        DB_Load --> DB_FetchQuote
+        DB_FetchStats --> DB_Render
+        DB_FetchQuote --> DB_Render
+        DB_Update --> DB_FetchStats
+    end
+    
+    subgraph "Journal Module"
+        J_List["View Journal List"]
+        J_Create["Create Entry"]
+        J_Edit["Edit Content\n- toggleMode()\n- handleChange()"]
+        J_Save["Save Entry\nonSubmit()"]
+        J_Analyze["Analyze Sentiment\nai.analyzeSentiment()"]
+        J_View["View Entry"]
+        
+        J_List --> J_View
+        J_List --> J_Create
+        J_Create --> J_Edit
+        J_View --> J_Edit
+        J_Edit --> J_Save
+        J_Save --> J_Analyze
+        J_Analyze --> J_List
+    end
+    
+    subgraph "Goals Module"
+        G_List["View Goals"]
+        G_Create["Create Goal"]
+        G_AddTask["Add Tasks"]
+        G_Track["Track Progress"]
+        G_Update["Update Status"]
+        G_Complete["Complete Tasks/Goals"]
+        
+        G_List --> G_Create
+        G_Create --> G_AddTask
+        G_AddTask --> G_Track
+        G_Track --> G_Update
+        G_Update --> G_Complete
+        G_Complete --> G_List
+    end
+    
+    subgraph "Mental Health Module"
+        MH_Record["Record Mood\naddMoodEntry()"]
+        MH_View["View Mood History\nviewMoodCalendar()"]
+        MH_Chat["Chat with AI\nstartAIChat()"]
+        MH_Analyze["Analyze Patterns\nanalyzeMoodPatterns()"]
+        MH_Meditate["Start Meditation\nstartGuidedSession()"]
+        
+        MH_Record --> MH_View
+        MH_View --> MH_Analyze
+        MH_Analyze --> MH_Chat
+        MH_Chat --> MH_Meditate
+    end
+    
+    subgraph "Physical Health Module"
+        PH_Log["Log Metrics\naddHealthMetric()"]
+        PH_Activity["Record Activity\nlogActivity()"]
+        PH_Chart["View Charts\nrenderHealthCharts()"]
+        PH_Recommend["Get Recommendations\ngetAIRecommendations()"]
+        PH_Export["Export Data\nexportHealthData()"]
+        
+        PH_Log --> PH_Chart
+        PH_Activity --> PH_Chart
+        PH_Chart --> PH_Recommend
+        PH_Chart --> PH_Export
+    end
+    
+    subgraph "Nutrition Module"
+        N_Log["Log Food\naddFoodItem()"]
+        N_Calculate["Calculate Nutrition\ncalculateMacros()"]
+        N_Track["Track Water\ntrackWaterIntake()"]
+        N_View["View Summary\nviewNutritionSummary()"]
+        N_Plan["Plan Meals\ngetMealSuggestions()"]
+        
+        N_Log --> N_Calculate
+        N_Calculate --> N_View
+        N_Track --> N_View
+        N_View --> N_Plan
+    end
+    
+    subgraph "Family & Social Module"
+        S_Event["Create Event\naddSocialEvent()"]
+        S_Track["Track Interactions\nlogInteraction()"]
+        S_Analyze["Analyze Time\nanalyzeSocialTime()"]
+        S_Suggest["Get Suggestions\ngetActivityIdeas()"]
+        S_Reminder["Set Reminders\nsetConnectionReminder()"]
+        
+        S_Event --> S_Track
+        S_Track --> S_Analyze
+        S_Analyze --> S_Suggest
+        S_Suggest --> S_Reminder
+    end
+    
+    subgraph "AI Service Layer"
+        AI_Complete["generateCompletion()\n- Input: prompt, context\n- Output: AI response"]
+        AI_Sentiment["analyzeSentiment()\n- Input: text content\n- Output: sentiment category"]
+        AI_Recommend["generateRecommendation()\n- Input: user data, context\n- Output: personalized advice"] 
+        AI_Chat["handleChatMessage()\n- Input: conversation history, message\n- Output: AI response"]
+        
+        OpenAI["OpenAI API"]
+        
+        AI_Complete --> OpenAI
+        AI_Sentiment --> OpenAI
+        AI_Recommend --> OpenAI
+        AI_Chat --> OpenAI
+    end
+    
+    subgraph "Authentication Flow"
+        Auth_Register["Register\n- signUp()"]
+        Auth_Login["Login\n- signIn()"]
+        Auth_Session["Check Session\n- getSession()"]
+        Auth_Logout["Logout\n- signOut()"]
+        Auth_Reset["Reset Password\n- resetPassword()"]
+        Auth_Update["Update Profile\n- updateProfile()"]
+        
+        Auth_Register --> Auth_Login
+        Auth_Login --> Auth_Session
+        Auth_Session --> Auth_Update
+        Auth_Update --> Auth_Logout
+        Auth_Logout --> Auth_Login
+        Auth_Login --> Auth_Reset
+        Auth_Reset --> Auth_Login
+    end
+    
+    %% Connect modules to AI Services
+    J_Analyze --> AI_Sentiment
+    MH_Chat --> AI_Chat
+    MH_Analyze --> AI_Complete
+    PH_Recommend --> AI_Recommend
+    N_Plan --> AI_Recommend
+    S_Suggest --> AI_Complete
+    DB_FetchQuote --> AI_Complete

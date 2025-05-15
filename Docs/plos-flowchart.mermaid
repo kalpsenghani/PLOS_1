@@ -1,0 +1,92 @@
+flowchart TD
+    subgraph "Frontend (Next.js App Router)"
+        Dashboard["Dashboard Page"]
+        Journal["Journal Module"]
+        Goals["Goals & Planner"]
+        MentalHealth["Mental Health"]
+        PhysicalHealth["Physical Health"]
+        Nutrition["Nutrition & Diet"]
+        Social["Family & Social"]
+    end
+    
+    subgraph "State Management (Zustand)"
+        DashboardStore["Dashboard Store\n- stats\n- updateStat()"]
+        JournalStore["Journal Store"]
+        GoalsStore["Goals Store"]
+        MentalStore["Mental Health Store"]
+        PhysicalStore["Physical Health Store"]
+        NutritionStore["Nutrition Store"]
+        SocialStore["Social Store"]
+    end
+    
+    subgraph "API Routes"
+        AuthAPI["Auth API\n- login\n- register\n- logout"]
+        QuoteAPI["Quote API\n- GET daily quote"]
+        JournalAPI["Journal API\n- CRUD operations"]
+        GoalsAPI["Goals API"]
+        MentalAPI["Mental Health API"]
+        PhysicalAPI["Physical Health API"]
+        NutritionAPI["Nutrition API"]
+        SocialAPI["Social API"]
+        AIAPI["AI API\n- insights\n- recommendations"]
+    end
+    
+    subgraph "Database (Supabase)"
+        Users[("users")]
+        JournalEntries[("journal_entries")]
+        Goals[("goals")]
+        MoodEntries[("mood_entries")]
+        HealthMetrics[("health_metrics")]
+        NutritionLogs[("nutrition_logs")]
+        SocialEvents[("social_events")]
+        AIInsights[("ai_insights")]
+    end
+    
+    subgraph "AI Services"
+        OpenAI["OpenAI API"]
+        AIService["AI Service\n- generateCompletion()\n- analyzeSentiment()"]
+    end
+    
+    %% Frontend to State Management connections
+    Dashboard --> DashboardStore
+    Journal --> JournalStore
+    Goals --> GoalsStore
+    MentalHealth --> MentalStore
+    PhysicalHealth --> PhysicalStore
+    Nutrition --> NutritionStore
+    Social --> SocialStore
+    
+    %% State Management to API connections
+    DashboardStore --> QuoteAPI
+    JournalStore --> JournalAPI
+    GoalsStore --> GoalsAPI
+    MentalStore --> MentalAPI
+    PhysicalStore --> PhysicalAPI
+    NutritionStore --> NutritionAPI
+    SocialStore --> SocialAPI
+    
+    %% API to Database connections
+    AuthAPI --> Users
+    JournalAPI --> JournalEntries
+    GoalsAPI --> Goals
+    MentalAPI --> MoodEntries
+    PhysicalAPI --> HealthMetrics
+    NutritionAPI --> NutritionLogs
+    SocialAPI --> SocialEvents
+    AIAPI --> AIInsights
+    
+    %% AI connections
+    JournalAPI --> AIService
+    MentalAPI --> AIService
+    AIAPI --> AIService
+    AIService --> OpenAI
+    QuoteAPI --> OpenAI
+    
+    %% User flow
+    User((User)) --> Dashboard
+    User --> Journal
+    User --> Goals
+    User --> MentalHealth
+    User --> PhysicalHealth
+    User --> Nutrition
+    User --> Social

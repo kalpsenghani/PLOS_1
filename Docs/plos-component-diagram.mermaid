@@ -1,0 +1,57 @@
+flowchart TD
+    subgraph "Frontend Layer"
+        A[Next.js App] --> B[Page Components]
+        B --> B1[Dashboard]
+        B --> B2[Health Tracker]
+        B --> B3[Mental Health]
+        B --> B4[Nutrition]
+        B --> B5[Family & Social]
+        B --> B6[Goals & Planner]
+        B --> B7[Life Journal]
+        
+        A --> C[Shared Components]
+        C --> C1[Navigation]
+        C --> C2[Charts & Visualizations]
+        C --> C3[Form Elements]
+        C --> C4[Modal System]
+        
+        A --> D[State Management]
+        D --> D1[Zustand Stores]
+        D --> D2[React Query]
+    end
+    
+    subgraph "API Layer"
+        E[Next.js API Routes] --> E1[Auth API]
+        E --> E2[Health API]
+        E --> E3[Mental API]
+        E --> E4[Nutrition API]
+        E --> E5[Social API]
+        E --> E6[Goals API]
+        E --> E7[Journal API]
+        E --> E8[AI Router]
+    end
+    
+    subgraph "Data Layer"
+        F[Supabase] --> F1[PostgreSQL]
+        F --> F2[Authentication]
+        F --> F3[Storage]
+        F --> F4[Realtime]
+        
+        G[Client-Side Storage] --> G1[LocalStorage]
+        G --> G2[IndexedDB]
+    end
+    
+    subgraph "AI Services"
+        H[OpenAI] --> H1[GPT Completions]
+        H --> H2[Embeddings]
+        H --> H3[Vision API]
+        
+        I[Local AI] --> I1[Transformers.js]
+        I --> I2[Sentiment Analysis]
+    end
+    
+    %% Connections between layers
+    B1 & B2 & B3 & B4 & B5 & B6 & B7 --> E
+    E1 & E2 & E3 & E4 & E5 & E6 & E7 --> F
+    E8 --> H
+    E --> I
