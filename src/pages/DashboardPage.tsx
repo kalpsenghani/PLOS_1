@@ -2,12 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { motion } from 'framer-motion';
 import { BookOpen, Calendar, Plus, Target } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 import { RootState, AppDispatch } from '../redux/store';
 import { getHealthData } from '../redux/slices/healthSlice';
 import { getMoodEntries, addMoodEntry } from '../redux/slices/mentalHealthSlice';
 import { getGoals } from '../redux/slices/goalsSlice';
 import { getJournalEntries } from '../redux/slices/journalSlice';
+import { fetchDailyQuote } from '../redux/slices/dashboardSlice';
 
 import Card from '../components/common/Card';
 import Button from '../components/common/Button';
@@ -20,13 +22,14 @@ import GoalForm from '../components/goals/GoalForm';
 
 const DashboardPage: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
   const { user } = useSelector((state: RootState) => state.auth);
   const { todayData, weeklyAverage } = useSelector((state: RootState) => state.health);
   const { todayEntry } = useSelector((state: RootState) => state.mentalHealth);
   const { goals } = useSelector((state: RootState) => state.goals);
   const { entries } = useSelector((state: RootState) => state.journal);
+  const { quote } = useSelector((state: RootState) => state.dashboard);
   
-  const [quote, setQuote] = useState('The only way to do great work is to love what you do.');
   const [isGoalFormOpen, setIsGoalFormOpen] = useState(false);
   
   useEffect(() => {
@@ -35,16 +38,7 @@ const DashboardPage: React.FC = () => {
     dispatch(getMoodEntries());
     dispatch(getGoals());
     dispatch(getJournalEntries());
-    
-    // Fetch a random quote (mock)
-    const quotes = [
-      'The only way to do great work is to love what you do.',
-      'It always seems impossible until it\'s done.',
-      'The future depends on what you do today.',
-      'The best way to predict the future is to create it.',
-      'You are never too old to set another goal or to dream a new dream.',
-    ];
-    setQuote(quotes[Math.floor(Math.random() * quotes.length)]);
+    dispatch(fetchDailyQuote());
   }, [dispatch]);
   
   const handleMoodSelection = (mood: string) => {
@@ -54,6 +48,18 @@ const DashboardPage: React.FC = () => {
       mood: mood as any,
       notes: '',
     }));
+  };
+
+  const handleViewAllGoals = () => {
+    navigate('/goals');
+  };
+
+  const handleViewAllJournal = () => {
+    navigate('/journal');
+  };
+
+  const handleViewCalendar = () => {
+    navigate('/health');
   };
   
   return (
@@ -105,15 +111,24 @@ const DashboardPage: React.FC = () => {
                     </div>
                   ))}
                   
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    fullWidth
-                    icon={<Plus size={16} />}
-                    onClick={() => setIsGoalFormOpen(true)}
-                  >
-                    Add New Goal
-                  </Button>
+                  <div className="flex space-x-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      fullWidth
+                      icon={<Plus size={16} />}
+                      onClick={() => setIsGoalFormOpen(true)}
+                    >
+                      Add New Goal
+                    </Button>
+                    <Button
+                      variant="text"
+                      size="sm"
+                      onClick={handleViewAllGoals}
+                    >
+                      View All
+                    </Button>
+                  </div>
                 </div>
               ) : (
                 <div className="text-center py-4">
@@ -155,14 +170,24 @@ const DashboardPage: React.FC = () => {
                   </div>
                 ))}
                 
-                <Button
-                  variant="outline"
-                  size="sm"
-                  fullWidth
-                  icon={<Plus size={16} />}
-                >
-                  Write New Entry
-                </Button>
+                <div className="flex space-x-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    fullWidth
+                    icon={<Plus size={16} />}
+                    onClick={() => navigate('/journal/new')}
+                  >
+                    Write New Entry
+                  </Button>
+                  <Button
+                    variant="text"
+                    size="sm"
+                    onClick={handleViewAllJournal}
+                  >
+                    View All
+                  </Button>
+                </div>
               </div>
             ) : (
               <div className="text-center py-4">
@@ -171,6 +196,7 @@ const DashboardPage: React.FC = () => {
                   variant="primary"
                   size="sm"
                   icon={<Plus size={16} />}
+                  onClick={() => navigate('/journal/new')}
                 >
                   Write First Entry
                 </Button>
@@ -220,6 +246,7 @@ const DashboardPage: React.FC = () => {
                 variant="text"
                 size="sm"
                 icon={<Calendar size={16} />}
+                onClick={handleViewCalendar}
               >
                 View full calendar
               </Button>

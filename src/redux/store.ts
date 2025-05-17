@@ -4,6 +4,7 @@ import healthReducer from './slices/healthSlice';
 import mentalHealthReducer from './slices/mentalHealthSlice';
 import journalReducer from './slices/journalSlice';
 import goalsReducer from './slices/goalsSlice';
+import dashboardReducer from './slices/dashboardSlice';
 
 export const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ export const store = configureStore({
     mentalHealth: mentalHealthReducer,
     journal: journalReducer,
     goals: goalsReducer,
+    dashboard: dashboardReducer,
   },
 });
 
